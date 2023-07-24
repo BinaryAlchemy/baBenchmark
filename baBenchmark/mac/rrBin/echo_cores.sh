@@ -1,0 +1,1 @@
+echo rrClient cores $rrClientCoresUsed
