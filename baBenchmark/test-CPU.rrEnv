@@ -114,27 +114,27 @@ testCount = 10
 
 
 echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
-echo 1/<testCount> rrTestMachine... >> <resultLog> 2>&1
+echo CPU 1/<testCount> rrTestMachine... >> <resultLog> 2>&1
 echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
 [Exec] "<RR_APP>rrParseOutput" "<RR_APP>rrTestMachine -no_save -no_minus"  table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  <resultErrorLog> "Workstation,Unique=<HostName>" "OS=OS type:  ';;' " "OSver=OS_Info:  ';;' " "VM=VM host:  ';;'" "VM_hardware=VM hardware:  ';;'"  "VM_region=VM region:  ';;'"  "Ver=<BenchmarkVersion>"  "StartDate=[dateMonth]" "StartTime=[creationTime]" >> <resultLog> 2>&1
 
 
 echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
-echo 2/<testCount> rrClientCoresUsed... >> <resultLog> 2>&1
+echo CPU 2/<testCount> rrClientCoresUsed... >> <resultLog> 2>&1
 echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
 rrClientCoresUsed=<rrClientCoresUsed>
 [Exec] "<RR_APP>rrParseOutput" "<rrBin>/echo_cores.allos"  table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  <resultErrorLog> "Workstation,Unique=<HostName>" "CoresRRClient=rrClient cores;;"  >> <resultLog> 2>&1
 
 
 echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
-echo 3/<testCount> baCPUInfo... >> <resultLog> 2>&1
+echo CPU 3/<testCount> baCPUInfo... >> <resultLog> 2>&1
 echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
 [Exec] "<RR_APP>rrParseOutput" "<RR_APP>baCPUInfo"  table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  <resultErrorLog> "Workstation,Unique=<HostName>" "Cores=CPU Core Count:;;" "CoresHW=CPU Core Count (HW):;;"  "CPU=CPU:;;" "RAM=RAM  GB:;;"  "RAM Mhz=RAM  Mhz:;;"   >> <resultLog> 2>&1
 
 
 echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
 echo [EchoCurrentTime]
-echo 4/<testCount> rrTest_CpuBenchmark ... >> <resultLog> 2>&1
+echo CPU 4/<testCount> rrTest_CpuBenchmark ... >> <resultLog> 2>&1
 echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
 [Exec] "<RR_APP>rrParseOutput" "<RR_APP>rrTest_CpuBenchmark ClientMultiNoPrint exitCodeThreshold 200" table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  <resultErrorLog> -showTerminal -forwardExitCode "Workstation,Unique=<HostName>" "rrPS,NumberP=PS_Result:;;"  "rrPS core,NumberP=Average per core:;;PS" "CPUps=[MaxCPU]" "avCPUps=[AvrgCPU]"  "rrTime,Number=Time_Exec:;;sec"  "GhzCur,Number=CPU MHz summed (measured current, HT adjusted):;;"  "GhzCal,Number=CPU MHz summed (calculated per Core, HT adjusted):;;" >> <resultLog> 2>&1
 speedIdx= [ExitCode]
@@ -166,39 +166,39 @@ ARNOLD_ADP_OPTIN=      0
 
     echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
     echo [EchoCurrentTime]
-    echo 5/<testCount> Blender... >> <resultLog> 2>&1
+    echo CPU 5/<testCount> Blender... >> <resultLog> 2>&1
     echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
     [Exec] "<RR_APP>rrParseOutput" "<BLENDER_APP> -t 0 -b -P <dataDir>/kso_blender.py -y --  -rAA 0.35 -rRenderer "Cycles" -rStart 1 -rEnd 1 -rStep 1 -rBlend <dataDir>/main.blend -rOut  <tempOut>/blendTest -f 1" table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  <resultErrorLog> -showTerminal "Workstation,Unique=<HostName>" "Blender=[ExecutionTimeSec_Invert4x]" "BlenderTime,NumberTime4x=Time: ;;(" "Blender_Cpu=[MaxCPU]" "Blender_avCpu=[AvrgCPU]"  "Blender_ver=Blender version:;;"  >> <resultLog> 2>&1
 
     echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
     echo [EchoCurrentTime]
-    echo 6/<testCount> Arnold Village... >> <resultLog> 2>&1
+    echo CPU 6/<testCount> Arnold Village... >> <resultLog> 2>&1
     echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
     [Exec] "<RR_APP>rrParseOutput" "<Arnold_Dir>/bin/kick -i <dataDir>/village.ass.gz  -o <tempOut>/village.exr     -l <Arnold_Dir>/bin -dw -dp -as 7 -nstdin -v 2"   table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  <resultErrorLog> -showTerminal "Workstation,Unique=<HostName>" "ArnoldV=[ExecutionTimeSec_Invert4x]" "ArnoldVTime,NumberTime4x=render done in;;"  "Arnold_Cpu=[MaxCPU]"  "Arnold_avCpu=[AvrgCPU]" "Arnold_ver=Arnold;;["  >> <resultLog> 2>&1
 
     echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
     echo [EchoCurrentTime]
-    echo 7/<testCount> Arnold Fish... >> <resultLog> 2>&1
+    echo CPU 7/<testCount> Arnold Fish... >> <resultLog> 2>&1
     echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
     [Exec] "<RR_APP>rrParseOutput" "<Arnold_Dir>/bin/kick -i <dataDir>/fish.ass.gz     -o <tempOut>/Angler-fish.exr -l <Arnold_Dir>/bin -dw -dp -as 8 -nstdin -v 2"   table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  <resultErrorLog> -showTerminal "Workstation,Unique=<HostName>" "ArnoldF=[ExecutionTimeSec_Invert4x]" "ArnoldFTime,NumberTime4x=render done in;;" "Arnold_CpuF=[MaxCPU]"  "Arnold_avCpuF=[AvrgCPU]"  >> <resultLog> 2>&1
 [Else]
     echo FAST MACHINE TEST >> <resultLog> 2>&1
     echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
     echo [EchoCurrentTime]
-    echo 5/<testCount> Blender... >> <resultLog> 2>&1
+    echo CPU 5/<testCount> Blender... >> <resultLog> 2>&1
     echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
     [Exec] "<RR_APP>rrParseOutput" "<BLENDER_APP> -t 0 -b -P <dataDir>/kso_blender.py -y --  -rAA 1.4 -rRenderer "Cycles" -rStart 1 -rEnd 1 -rStep 1 -rBlend <dataDir>/main.blend -rOut  <tempOut>/blendTest -f 1" table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  <resultErrorLog> -showTerminal "Workstation,Unique=<HostName>" "Blender=[ExecutionTimeSec_Invert]" "BlenderTime,NumberTime=Time: ;;(" "Blender_Cpu=[MaxCPU]" "Blender_avCpu=[AvrgCPU]"  "Blender_ver=Blender version:;;"  >> <resultLog> 2>&1
 
     echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
     echo [EchoCurrentTime]
-    echo 6/<testCount> Arnold Village... >> <resultLog> 2>&1
+    echo CPU 6/<testCount> Arnold Village... >> <resultLog> 2>&1
     echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
 
     [Exec] "<RR_APP>rrParseOutput" "<Arnold_Dir>/bin/kick -i <dataDir>/village.ass.gz  -o <tempOut>/village.exr     -l <Arnold_Dir>/bin -dw -dp -as 14 -nstdin -v 2"   table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  <resultErrorLog> -showTerminal "Workstation,Unique=<HostName>" "ArnoldV=[ExecutionTimeSec_Invert]" "ArnoldVTime,NumberTime=render done in;;"  "Arnold_Cpu=[MaxCPU]"  "Arnold_avCpu=[AvrgCPU]" "Arnold_ver=Arnold;;["  >> <resultLog> 2>&1
 
     echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
     echo [EchoCurrentTime]
-    echo 7/<testCount> Arnold Fish... >> <resultLog> 2>&1
+    echo CPU 7/<testCount> Arnold Fish... >> <resultLog> 2>&1
     echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
     [Exec] "<RR_APP>rrParseOutput" "<Arnold_Dir>/bin/kick -i <dataDir>/fish.ass.gz     -o <tempOut>/Angler-fish.exr -l <Arnold_Dir>/bin -dw -dp -as 16 -nstdin -v 2"   table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  <resultErrorLog> -showTerminal "Workstation,Unique=<HostName>" "ArnoldF=[ExecutionTimeSec_Invert]" "ArnoldFTime,NumberTime=render done in;;" "Arnold_CpuF=[MaxCPU]"  "Arnold_avCpuF=[AvrgCPU]"  >> <resultLog> 2>&1
 [EndIf]
@@ -234,15 +234,15 @@ ARNOLD_ADP_OPTIN=      0
 
 echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
 echo [EchoCurrentTime]
-echo 8/<testCount> VRay... >> <resultLog> 2>&1
+echo CPU 8/<testCount> VRay... >> <resultLog> 2>&1
 echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
-[Exec] "<RR_APP>rrParseOutput" "<LocalTemp>/vray/vray_test.allos"   table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  <resultErrorLog> -showTerminal "Workstation,Unique=<HostName>" "VRay,Number=score:;;vsamples" "VRay_CPU=[MaxCPU]" "VRay_avCpu=[AvrgCPU]" "VRay_ver=V-Ray;;["  >> <resultLog> 2>&1
+[Exec] "<RR_APP>rrParseOutput" "<LocalTemp>/vray/vray_test.allos"   table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  <resultErrorLog> -showTerminal "Workstation,Unique=<HostName>" "VRay,Number=score:;;vsamples" "VRay_CPU=[MaxCPU]" "VRay_avCpu=[AvrgCPU]" "VRay_ver=] V-Ray Benchmark;;["  >> <resultLog> 2>&1
 
 
 [Exec] <RR_APP>rrCompress  -d -7z <binRoot>/CinebenchR23.7z <LocalTemp>
 echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
 echo [EchoCurrentTime]
-echo 9/<testCount> C4D/CineBench... >> <resultLog> 2>&1
+echo CPU 9/<testCount> C4D/CineBench... >> <resultLog> 2>&1
 echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
 [If] <rrExeOS>  [==] win
     [If] <rrClientRunMode>  [==] service
@@ -264,7 +264,7 @@ echo ---------------------------------------------------------------------------
 
 echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
 echo [EchoCurrentTime]
-echo 10/<testCount> rrTest_CpuBenchmark... >> <resultLog> 2>&1
+echo CPU 10/<testCount> rrTest_CpuBenchmark... >> <resultLog> 2>&1
 echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
 [Exec] "<RR_APP>rrParseOutput" "<RR_APP>rrTest_CpuBenchmark ClientMultiNoPrint" table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  <resultErrorLog> -showTerminal "Workstation,Unique=<HostName>" "rrPS2,NumberP=PS_Result:;;" "GhzCur2,Number=CPU MHz summed (measured current, HT adjusted):;;"  >> <resultLog> 2>&1
 

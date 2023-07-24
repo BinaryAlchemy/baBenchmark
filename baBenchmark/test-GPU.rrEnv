@@ -48,9 +48,9 @@ AppendRandom= TRUE
     HostName = <HostName>_<RandStr>
 [EndIf]
 
-resultLog= <Base_Dir>_results/log/<HostName>__<rrExeOS>_GPU.txt
-resultErrorLog= <Base_Dir>_results/log/<HostName>__<rrExeOS>_GPU____ERROR.txt
-resultCSV= <Base_Dir>_results/GPU-Results___<IP_Server>.csv
+resultLog= <Base_Dir>_results/log/<HostName>__<rrExeOS>_gpu.txt
+resultErrorLog= <Base_Dir>_results/log/<HostName>__<rrExeOS>_gpu____ERROR.txt
+resultCSV= <Base_Dir>_results/gpu-Results___<IP_Server>.csv
 
 echo HostName used is <HostName>  >> <resultLog> 2>&1
 
@@ -91,7 +91,7 @@ echo baBenchmarkVersion: <BenchmarkVersion>   >> <resultLog> 2>&1
 
 
 #not required, but in case something fails, then the result file matches all .csv files generated
-[copy] KeepExisting <dataDir>/empty_GPU.csv   =>   <resultCSV>
+[copy] KeepExisting <dataDir>/empty_gpu.csv   =>   <resultCSV>
 
 
 #linux does not support an exit core bigger than 255. So we have to split the time value.
@@ -110,20 +110,20 @@ testCount = 10
 
 
 echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
-echo 1/<testCount> rrTestMachine... >> <resultLog> 2>&1
+echo gpu 1/<testCount> rrTestMachine... >> <resultLog> 2>&1
 echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
 [Exec] "<RR_APP>rrParseOutput" "<RR_APP>rrTestMachine -no_save -no_minus"  table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  <resultErrorLog> "Workstation,Unique=<HostName>" "OS=OS type:  ';;' " "OSver=OS_Info:  ';;' " "VM=VM host:  ';;'" "VM_hardware=VM hardware:  ';;'"  "VM_region=VM region:  ';;'"  "VerG=<BenchmarkVersion>"  "StartDate=[dateMonth]" "StartTime=[creationTime]" >> <resultLog> 2>&1
 
 
 echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
-echo 2/<testCount> rrClientCoresUsed... >> <resultLog> 2>&1
+echo gpu 2/<testCount> rrClientCoresUsed... >> <resultLog> 2>&1
 echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
 rrClientCoresUsed=<rrClientCoresUsed>
 [Exec] "<RR_APP>rrParseOutput" "<rrBin>/echo_cores.allos"  table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  <resultErrorLog> "Workstation,Unique=<HostName>" "CoresRRClient=rrClient cores;;"  >> <resultLog> 2>&1
 
 
 echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
-echo 3/<testCount> baCPUInfo... >> <resultLog> 2>&1
+echo gpu 3/<testCount> baCPUInfo... >> <resultLog> 2>&1
 echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
 [Exec] "<RR_APP>rrParseOutput" "<RR_APP>baCPUInfo"  table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  <resultErrorLog> "Workstation,Unique=<HostName>" "Cores=CPU Core Count:;;" "CoresHW=CPU Core Count (HW):;;"  "CPU=CPU:;;" "RAM=RAM  GB:;;"  "RAM Mhz=RAM  Mhz:;;"   >> <resultLog> 2>&1
 
@@ -160,13 +160,13 @@ echo noOptix is <noOptix> >> <resultLog> 2>&1
 
     echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
     echo [EchoCurrentTime]
-    echo 4/<testCount> Blender... >> <resultLog> 2>&1
+    echo gpu 4/<testCount> Blender... >> <resultLog> 2>&1
     echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
     [Exec] "<RR_APP>rrParseOutput" "<BLENDER_APP> -t 0 -b -P <dataDir>/kso_blender.py -y --  -rGPU                           -rAA 1.05 -rRenderer "Cycles" -rStart 1 -rEnd 1 -rStep 1 -rBlend <dataDir>/main.blend -rOut  <tempOut>/blendTest -f 1" table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  <resultErrorLog> -showTerminal "Workstation,Unique=<HostName>" "GPU0=Enabling device 0;;" "BlenderG=[ExecutionTimeSec_Invert4x]" "BlenderTimeG,NumberTime4x=Time: ;;(" "Blender_avCpuG=[AvrgCPU]"  "Blender_verG=Blender version:;;" >> <resultLog> 2>&1
 
     echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
     echo [EchoCurrentTime]
-    echo 5/<testCount> Blender... >> <resultLog> 2>&1
+    echo gpu 5/<testCount> Blender... >> <resultLog> 2>&1
     echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
     [Exec] "<RR_APP>rrParseOutput" "<BLENDER_APP> -t 0 -b -P <dataDir>/kso_blender.py -y --  -rGPU  -rGPU_CPU                -rAA 1.05 -rRenderer "Cycles" -rStart 1 -rEnd 1 -rStep 1 -rBlend <dataDir>/main.blend -rOut  <tempOut>/blendTest -f 1" table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  <resultErrorLog> -showTerminal "Workstation,Unique=<HostName>" "GPU0=Enabling device 0;;" "BlenderGC=[ExecutionTimeSec_Invert4x]" "BlenderTimeGC,NumberTime4x=Time: ;;(" "Blender_avCpuGC=[AvrgCPU]" >> <resultLog> 2>&1
 
@@ -174,13 +174,13 @@ echo noOptix is <noOptix> >> <resultLog> 2>&1
     [If] <noOptix> [==] 0
         echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
         echo [EchoCurrentTime]
-        echo 6/<testCount> Blender... >> <resultLog> 2>&1
+        echo gpu 6/<testCount> Blender... >> <resultLog> 2>&1
         echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
         [Exec] "<RR_APP>rrParseOutput" "<BLENDER_APP> -t 0 -b -P <dataDir>/kso_blender.py -y --  -rGPU -rGPU_Optix           -rAA 1.05 -rRenderer "Cycles" -rStart 1 -rEnd 1 -rStep 1 -rBlend <dataDir>/main.blend -rOut  <tempOut>/blendTest -f 1" table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  <resultErrorLog> -showTerminal "Workstation,Unique=<HostName>" "BlenderGO=[ExecutionTimeSec_Invert4x]" "BlenderTimeGO,NumberTime4x=Time: ;;(" "Blender_avCpuGO=[AvrgCPU]" >> <resultLog> 2>&1
 
         echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
         echo [EchoCurrentTime]
-        echo 7/<testCount> Blender... >> <resultLog> 2>&1
+        echo gpu 7/<testCount> Blender... >> <resultLog> 2>&1
         echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
         [Exec] "<RR_APP>rrParseOutput" "<BLENDER_APP> -t 0 -b -P <dataDir>/kso_blender.py -y --  -rGPU -rGPU_Optix -rGPU_CPU -rAA 1.05 -rRenderer "Cycles" -rStart 1 -rEnd 1 -rStep 1 -rBlend <dataDir>/main.blend -rOut  <tempOut>/blendTest -f 1" table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  <resultErrorLog> -showTerminal "Workstation,Unique=<HostName>" "BlenderGOC=[ExecutionTimeSec_Invert4x]" "BlenderTimeGOC,NumberTime4x=Time: ;;(" "Blender_avCpuGOC=[AvrgCPU]" >> <resultLog> 2>&1
 
@@ -191,13 +191,13 @@ echo noOptix is <noOptix> >> <resultLog> 2>&1
     
     echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
     echo [EchoCurrentTime]
-    echo 4/<testCount> Blender... >> <resultLog> 2>&1
+    echo gpu 4/<testCount> Blender... >> <resultLog> 2>&1
     echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
     [Exec] "<RR_APP>rrParseOutput" "<BLENDER_APP> -t 0 -b -P <dataDir>/kso_blender.py -y --  -rGPU                           -rAA 4.2 -rRenderer "Cycles" -rStart 1 -rEnd 1 -rStep 1 -rBlend <dataDir>/main.blend -rOut  <tempOut>/blendTest -f 1" table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  <resultErrorLog> -showTerminal "Workstation,Unique=<HostName>" "GPU0=Enabling device 0;;" "BlenderG=[ExecutionTimeSec_Invert]" "BlenderTimeG,NumberTime=Time: ;;(" "Blender_avCpuG=[AvrgCPU]"  "Blender_verG=Blender version:;;" >> <resultLog> 2>&1
  
     echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
     echo [EchoCurrentTime]
-    echo 5/<testCount> Blender... >> <resultLog> 2>&1
+    echo gpu 5/<testCount> Blender... >> <resultLog> 2>&1
     echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
     [Exec] "<RR_APP>rrParseOutput" "<BLENDER_APP> -t 0 -b -P <dataDir>/kso_blender.py -y --  -rGPU -rGPU_CPU                 -rAA 4.2 -rRenderer "Cycles" -rStart 1 -rEnd 1 -rStep 1 -rBlend <dataDir>/main.blend -rOut  <tempOut>/blendTest -f 1" table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  <resultErrorLog> -showTerminal "Workstation,Unique=<HostName>" "GPU0=Enabling device 0;;" "BlenderGC=[ExecutionTimeSec_Invert]" "BlenderTimeGC,NumberTime=Time: ;;(" "Blender_avCpuGC=[AvrgCPU]" >> <resultLog> 2>&1
  
@@ -205,13 +205,13 @@ echo noOptix is <noOptix> >> <resultLog> 2>&1
 
         echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
         echo [EchoCurrentTime]
-        echo 6/<testCount> Blender... >> <resultLog> 2>&1
+        echo gpu 6/<testCount> Blender... >> <resultLog> 2>&1
         echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
         [Exec] "<RR_APP>rrParseOutput" "<BLENDER_APP> -t 0 -b -P <dataDir>/kso_blender.py -y --  -rGPU -rGPU_Optix           -rAA 4.2 -rRenderer "Cycles" -rStart 1 -rEnd 1 -rStep 1 -rBlend <dataDir>/main.blend -rOut  <tempOut>/blendTest -f 1" table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  <resultErrorLog> -showTerminal "Workstation,Unique=<HostName>" "BlenderGO=[ExecutionTimeSec_Invert]" "BlenderTimeGO,NumberTime=Time: ;;(" "Blender_avCpuGO=[AvrgCPU]" >> <resultLog> 2>&1
 
         echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
         echo [EchoCurrentTime]
-        echo 7/<testCount> Blender... >> <resultLog> 2>&1
+        echo gpu 7/<testCount> Blender... >> <resultLog> 2>&1
         echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
         [Exec] "<RR_APP>rrParseOutput" "<BLENDER_APP> -t 0 -b -P <dataDir>/kso_blender.py -y --  -rGPU -rGPU_Optix -rGPU_CPU -rAA 4.2 -rRenderer "Cycles" -rStart 1 -rEnd 1 -rStep 1 -rBlend <dataDir>/main.blend -rOut  <tempOut>/blendTest -f 1" table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  <resultErrorLog> -showTerminal "Workstation,Unique=<HostName>" "BlenderGOC=[ExecutionTimeSec_Invert]" "BlenderTimeGOC,NumberTime=Time: ;;(" "Blender_avCpuGOC=[AvrgCPU]" >> <resultLog> 2>&1
 
@@ -226,7 +226,7 @@ echo noOptix is <noOptix> >> <resultLog> 2>&1
 
 echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
 echo [EchoCurrentTime]
-echo 8/<testCount> Octane... >> <resultLog> 2>&1
+echo gpu 8/<testCount> Octane... >> <resultLog> 2>&1
 echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
 
 [Exec] <RR_APP>rrCompress  -d -7z <binRoot>/octane.7z <LocalTemp>
@@ -279,14 +279,14 @@ echo ---------------------------------------------------------------------------
 
 echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
 echo [EchoCurrentTime]
-echo 9/<testCount> VRay... >> <resultLog> 2>&1
+echo gpu 9/<testCount> VRay... >> <resultLog> 2>&1
 echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
-[Exec] "<RR_APP>rrParseOutput" "<LocalTemp>/vray/vray_test_CUDA.allos"   table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  <resultErrorLog> -showTerminal "Workstation,Unique=<HostName>" "VRayGC,Number=CUDA score:;;vpaths"  "VRay_avCpuGC=[AvrgCPU]" "VRay_verG=V-Ray;;[" >> <resultLog> 2>&1
+[Exec] "<RR_APP>rrParseOutput" "<LocalTemp>/vray/vray_test_CUDA.allos"   table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  <resultErrorLog> -showTerminal "Workstation,Unique=<HostName>" "VRayGC,Number=CUDA score:;;vpaths"  "VRay_avCpuGC=[AvrgCPU]" "VRay_verG=] V-Ray Benchmark;;[" >> <resultLog> 2>&1
 
 
 echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
 echo [EchoCurrentTime]
-echo 10/<testCount> VRay... >> <resultLog> 2>&1
+echo gpu 10/<testCount> VRay... >> <resultLog> 2>&1
 echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
 [Exec] "<RR_APP>rrParseOutput" "<LocalTemp>/vray/vray_test_RTX.allos"   table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  <resultErrorLog> -showTerminal "Workstation,Unique=<HostName>" "VRayGR,Number=RTX score:;;vrays" "VRay_avCpuGR=[AvrgCPU]"  >> <resultLog> 2>&1
 
@@ -297,7 +297,7 @@ echo ---------------------------------------------------------------------------
 # 3.0.0 does not know Geforce 3000, latest 3.0.x opens maxon app
 # echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
 # echo [EchoCurrentTime]
-# echo 9/<testCount> Redshift... >> <resultLog> 2>&1
+# echo 11<testCount> Redshift... >> <resultLog> 2>&1
 # echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
 # [Exec] <RR_APP>rrCompress  -d -7z <binRoot>/Redshift.7z <LocalTemp>
 # [Exec] <RR_APP>rrCompress  -d -7z <dataDir>/RedshiftBenchmarkScene.7z <dataDir>
