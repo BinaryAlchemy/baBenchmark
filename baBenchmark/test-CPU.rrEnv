@@ -80,22 +80,16 @@ dataDirSource= <Base_Dir>data
 dataDir= <LocalTemp>/data
 
 echo [EchoCurrentTime]
-
-[copy] SyncCreateDir <dataDirSource>   =>   <dataDir>
-[Exec] <RR_APP>rrCompress  -d -7z <binRoot>/arnold.7z <LocalTemp>
-[Exec] <RR_APP>rrCompress  -d -7z <binRoot>/blender.7z <LocalTemp>
-[Exec] <RR_APP>rrCompress  -d -7z <dataDir>/blender_main.7z <dataDir>
-
-
-echo ------------------------- START--------------------------------   
-echo ------------------------- START--------------------------------   > <resultLog> 2>&1
 echo Writing results to <resultCSV>
 echo Writing logfile to <resultLog>
 echo baBenchmarkVersion: <BenchmarkVersion>   >> <resultLog> 2>&1
 
-
 #not required, but in case something fails, then the result file matches all .csv files generated
 [copy] KeepExisting <dataDir>/empty_CPU.csv   =>   <resultCSV>
+
+
+echo ------------------------- START--------------------------------   
+echo ------------------------- START--------------------------------   > <resultLog> 2>&1
 
 
 #linux does not support an exit core bigger than 255. So we have to split the time value.
@@ -108,6 +102,7 @@ startTime2= [ExitCode]
 startTime3= [ExitCode]
 [Exec] "<RR_APP>rrTest_TerminalTimer" -b4 >> <resultLog> 2>&1
 startTime4= [ExitCode]
+
 
 
 testCount = 10
@@ -141,12 +136,18 @@ speedIdx= [ExitCode]
 echo speedIdx is <speedIdx> >> <resultLog> 2>&1
 
 
+[copy] SyncCreateDir <dataDirSource>   =>   <dataDir>
+[Exec] <RR_APP>rrCompress  -d -7z <binRoot>/arnold.01.7z <LocalTemp>
+[Exec] <RR_APP>rrCompress  -d -7z <binRoot>/blender.01.7z <LocalTemp>
+[Exec] <RR_APP>rrCompress  -d -7z <dataDir>/arnold_ass.01.7z <dataDir>
+[Exec] <RR_APP>rrCompress  -d -7z <dataDir>/blender_main.01.7z <dataDir>
+
+
 [If] <rrExeOS>  [==] mac
     BLENDER_APP= <LocalTemp>/Blender.app/Contents/MacOS/Blender
 [Else]
     BLENDER_APP= <LocalTemp>/blender/blender
 [EndIf]
-
 
 
 Arnold_Dir= <LocalTemp>/arnold
@@ -157,9 +158,11 @@ LD_LIBRARY_PATH=       <Arnold_Dir>/procedurals;<Arnold_Dir>/arnold/procedurals
 DYLD_LIBRARY_PATH=     <Arnold_Dir>/procedurals;<Arnold_Dir>/arnold/procedurals    
 ARNOLD_ADP_OPTIN=      0   
 
+[If] <rrExeOS>  [!=] win
+    [Exec] chmod +x <BLENDER_APP>
+    [Exec] chmod +x <Arnold_Dir>/bin/kick
+[EndIf]
 
-[Exec] chmod +x <BLENDER_APP>
-[Exec] chmod +x <Arnold_Dir>/bin/kick
 
 [If] <speedIdx> [==] 0
     echo SLOW MACHINE TEST >> <resultLog> 2>&1
@@ -174,13 +177,13 @@ ARNOLD_ADP_OPTIN=      0
     echo [EchoCurrentTime]
     echo CPU 6/<testCount> Arnold Village... >> <resultLog> 2>&1
     echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
-    [Exec] "<RR_APP>rrParseOutput" "<Arnold_Dir>/bin/kick -i <dataDir>/village.ass.gz  -o <tempOut>/village.exr     -l <Arnold_Dir>/bin -dw -dp -as 7 -nstdin -v 2"   table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  <resultErrorLog> -showTerminal "Workstation,Unique=<HostName>" "ArnoldV=[ExecutionTimeSec_Invert4x]" "ArnoldVTime,NumberTime4x=render done in;;"  "Arnold_Cpu=[MaxCPU]"  "Arnold_avCpu=[AvrgCPU]" "Arnold_ver=Arnold;;["  >> <resultLog> 2>&1
+    [Exec] "<RR_APP>rrParseOutput" "<Arnold_Dir>/bin/kick -i <dataDir>/arnold_village.ass  -o <tempOut>/arnold_village.exr     -l <Arnold_Dir>/bin -dw -dp -as 7 -nstdin -v 2"   table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  <resultErrorLog> -showTerminal "Workstation,Unique=<HostName>" "ArnoldV=[ExecutionTimeSec_Invert4x]" "ArnoldVTime,NumberTime4x=render done in;;"  "Arnold_Cpu=[MaxCPU]"  "Arnold_avCpu=[AvrgCPU]" "Arnold_ver=Arnold;;["  >> <resultLog> 2>&1
 
     echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
     echo [EchoCurrentTime]
     echo CPU 7/<testCount> Arnold Fish... >> <resultLog> 2>&1
     echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
-    [Exec] "<RR_APP>rrParseOutput" "<Arnold_Dir>/bin/kick -i <dataDir>/fish.ass.gz     -o <tempOut>/Angler-fish.exr -l <Arnold_Dir>/bin -dw -dp -as 8 -nstdin -v 2"   table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  <resultErrorLog> -showTerminal "Workstation,Unique=<HostName>" "ArnoldF=[ExecutionTimeSec_Invert4x]" "ArnoldFTime,NumberTime4x=render done in;;" "Arnold_CpuF=[MaxCPU]"  "Arnold_avCpuF=[AvrgCPU]"  >> <resultLog> 2>&1
+    [Exec] "<RR_APP>rrParseOutput" "<Arnold_Dir>/bin/kick -i <dataDir>/arnold_fish.ass     -o <tempOut>/arnold_fish.exr -l <Arnold_Dir>/bin -dw -dp -as 8 -nstdin -v 2"   table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  <resultErrorLog> -showTerminal "Workstation,Unique=<HostName>" "ArnoldF=[ExecutionTimeSec_Invert4x]" "ArnoldFTime,NumberTime4x=render done in;;" "Arnold_CpuF=[MaxCPU]"  "Arnold_avCpuF=[AvrgCPU]"  >> <resultLog> 2>&1
 [Else]
     echo FAST MACHINE TEST >> <resultLog> 2>&1
     echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
@@ -194,13 +197,13 @@ ARNOLD_ADP_OPTIN=      0
     echo CPU 6/<testCount> Arnold Village... >> <resultLog> 2>&1
     echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
 
-    [Exec] "<RR_APP>rrParseOutput" "<Arnold_Dir>/bin/kick -i <dataDir>/village.ass.gz  -o <tempOut>/village.exr     -l <Arnold_Dir>/bin -dw -dp -as 14 -nstdin -v 2"   table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  <resultErrorLog> -showTerminal "Workstation,Unique=<HostName>" "ArnoldV=[ExecutionTimeSec_Invert]" "ArnoldVTime,NumberTime=render done in;;"  "Arnold_Cpu=[MaxCPU]"  "Arnold_avCpu=[AvrgCPU]" "Arnold_ver=Arnold;;["  >> <resultLog> 2>&1
+    [Exec] "<RR_APP>rrParseOutput" "<Arnold_Dir>/bin/kick -i <dataDir>/arnold_village.ass  -o <tempOut>/arnold_village.exr     -l <Arnold_Dir>/bin -dw -dp -as 14 -nstdin -v 2"   table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  <resultErrorLog> -showTerminal "Workstation,Unique=<HostName>" "ArnoldV=[ExecutionTimeSec_Invert]" "ArnoldVTime,NumberTime=render done in;;"  "Arnold_Cpu=[MaxCPU]"  "Arnold_avCpu=[AvrgCPU]" "Arnold_ver=Arnold;;["  >> <resultLog> 2>&1
 
     echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
     echo [EchoCurrentTime]
     echo CPU 7/<testCount> Arnold Fish... >> <resultLog> 2>&1
     echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
-    [Exec] "<RR_APP>rrParseOutput" "<Arnold_Dir>/bin/kick -i <dataDir>/fish.ass.gz     -o <tempOut>/Angler-fish.exr -l <Arnold_Dir>/bin -dw -dp -as 16 -nstdin -v 2"   table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  <resultErrorLog> -showTerminal "Workstation,Unique=<HostName>" "ArnoldF=[ExecutionTimeSec_Invert]" "ArnoldFTime,NumberTime=render done in;;" "Arnold_CpuF=[MaxCPU]"  "Arnold_avCpuF=[AvrgCPU]"  >> <resultLog> 2>&1
+    [Exec] "<RR_APP>rrParseOutput" "<Arnold_Dir>/bin/kick -i <dataDir>/arnold_fish.ass     -o <tempOut>/arnold_fish.exr -l <Arnold_Dir>/bin -dw -dp -as 16 -nstdin -v 2"   table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  <resultErrorLog> -showTerminal "Workstation,Unique=<HostName>" "ArnoldF=[ExecutionTimeSec_Invert]" "ArnoldFTime,NumberTime=render done in;;" "Arnold_CpuF=[MaxCPU]"  "Arnold_avCpuF=[AvrgCPU]"  >> <resultLog> 2>&1
 [EndIf]
 
 #apps and data is  not required any more. VRay and CineBench require space now
@@ -210,7 +213,7 @@ ARNOLD_ADP_OPTIN=      0
 [DelFolder]  <dataDir>
 
 
-[Exec] <RR_APP>rrCompress  -d -7z <binRoot>/vray.7z <LocalTemp>
+[Exec] <RR_APP>rrCompress  -d -7z <binRoot>/vray.01.7z <LocalTemp>
 
 [If] <rrExeOS>  [==] win
     #we have to do this to be able to use the Intel Performance Cores on Windows 10 for rendering
@@ -239,7 +242,7 @@ echo ---------------------------------------------------------------------------
 [Exec] "<RR_APP>rrParseOutput" "<LocalTemp>/vray/vray_test.allos"   table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  <resultErrorLog> -showTerminal "Workstation,Unique=<HostName>" "VRay,Number=score:;;vsamples" "VRay_CPU=[MaxCPU]" "VRay_avCpu=[AvrgCPU]" "VRay_ver=] V-Ray Benchmark;;["  >> <resultLog> 2>&1
 
 
-[Exec] <RR_APP>rrCompress  -d -7z <binRoot>/CinebenchR23.7z <LocalTemp>
+[Exec] <RR_APP>rrCompress  -d -7z <binRoot>/CinebenchR23.01.7z <LocalTemp>
 echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
 echo [EchoCurrentTime]
 echo CPU 9/<testCount> C4D/CineBench... >> <resultLog> 2>&1

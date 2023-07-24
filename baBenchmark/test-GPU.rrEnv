@@ -60,7 +60,7 @@ echo HostName used is <HostName>  >> <resultLog> 2>&1
 [Else]
     LocalTemp = /tmp/baBenchmarkG
 [EndIf]
-tempOut= <LocalTemp>/out
+tempOut= <LocalTemp>/outG
 
 
 #env name must be rrBin for .rrEnv command [copy] 
@@ -81,18 +81,15 @@ dataDir= <LocalTemp>/data
 
 echo [EchoCurrentTime]
 
-[copy] SyncCreateDir <dataDirSource>   =>   <dataDir>
-
-echo ------------------------- START--------------------------------   
-echo ------------------------- START--------------------------------   > <resultLog> 2>&1
 echo Writing results to <resultCSV>
 echo Writing logfile to <resultLog>
 echo baBenchmarkVersion: <BenchmarkVersion>   >> <resultLog> 2>&1
 
-
 #not required, but in case something fails, then the result file matches all .csv files generated
 [copy] KeepExisting <dataDir>/empty_gpu.csv   =>   <resultCSV>
 
+echo ------------------------- START--------------------------------   
+echo ------------------------- START--------------------------------   > <resultLog> 2>&1
 
 #linux does not support an exit core bigger than 255. So we have to split the time value.
 
@@ -104,6 +101,8 @@ startTime2= [ExitCode]
 startTime3= [ExitCode]
 [Exec] "<RR_APP>rrTest_TerminalTimer" -b4 >> <resultLog> 2>&1
 startTime4= [ExitCode]
+
+[copy] SyncCreateDir <dataDirSource>   =>   <dataDir>
 
 
 testCount = 10
@@ -134,15 +133,18 @@ echo [EchoCurrentTime]
 echo HARDWARE TEST >> <resultLog> 2>&1
 echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
 
-[Exec] <RR_APP>rrCompress  -d -7z <binRoot>/blender.7z <LocalTemp>
-[Exec] <RR_APP>rrCompress  -d -7z <dataDir>/blender_main.7z <dataDir>
+[Exec] <RR_APP>rrCompress  -d -7z <binRoot>/blender.01.7z <LocalTemp>
+[Exec] <RR_APP>rrCompress  -d -7z <dataDir>/blender_main.01.7z <dataDir>
 
 [If] <rrExeOS>  [==] mac
     BLENDER_APP= <LocalTemp>/Blender.app/Contents/MacOS/Blender
 [Else]
     BLENDER_APP= <LocalTemp>/blender/blender
 [EndIf]
-[Exec] chmod +x <BLENDER_APP>
+
+[If] <rrExeOS>  [!=] win
+    [Exec] chmod +x <BLENDER_APP>
+[EndIf]
 
 #speed test
 [Exec] "<RR_APP>rrParseOutput" "<BLENDER_APP> -t 0 -b -P <dataDir>/kso_blender.py -y --  -rGPU                       -rAA 0.05 -rRenderer "Cycles" -rStart 1 -rEnd 1 -rStep 1 -rBlend <dataDir>/main.blend -rOut  <tempOut>/blendTest -f 1" find GPU -showCmdOutput -csv_EN -ErrorLogfile  <resultErrorLog> -showTerminal -returnTimeExitCode >> <resultLog> 2>&1
@@ -229,13 +231,13 @@ echo [EchoCurrentTime]
 echo gpu 8/<testCount> Octane... >> <resultLog> 2>&1
 echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
 
-[Exec] <RR_APP>rrCompress  -d -7z <binRoot>/octane.7z <LocalTemp>
+[Exec] <RR_APP>rrCompress  -d -7z <binRoot>/octane.01.7z <LocalTemp>
 
 [If] <rrExeOS>  [==] mac
-    [Exec] <RR_APP>rrCompress  -d -7z <dataDir>/octane_benchmark_data.7z <LocalTemp>/OctaneBench.app/Contents/Resources/
+    [Exec] <RR_APP>rrCompress  -d -7z <dataDir>/octane_benchmark_data.01.7z <LocalTemp>/OctaneBench.app/Contents/Resources/
     OCTANE_APP=<LocalTemp>/OctaneBench.app/Contents/MacOS/octane
 [Else]
-    [Exec] <RR_APP>rrCompress  -d -7z <dataDir>/octane_benchmark_data.7z <LocalTemp>/octane/
+    [Exec] <RR_APP>rrCompress  -d -7z <dataDir>/octane_benchmark_data.01.7z <LocalTemp>/octane/
     [If] <rrExeOS>  [==] win
         OCTANE_APP=<LocalTemp>/octane/octane-cli.exe
     [Else]
@@ -255,7 +257,7 @@ echo ---------------------------------------------------------------------------
 
 
 
-[Exec] <RR_APP>rrCompress  -d -7z <binRoot>/vray.7z <LocalTemp>
+[Exec] <RR_APP>rrCompress  -d -7z <binRoot>/vray.01.7z <LocalTemp>
 
 [If] <rrExeOS>  [==] win
     #we have to do this to be able to use the Intel Performance Cores on Windows 10 for rendering
@@ -299,8 +301,8 @@ echo ---------------------------------------------------------------------------
 # echo [EchoCurrentTime]
 # echo 11<testCount> Redshift... >> <resultLog> 2>&1
 # echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
-# [Exec] <RR_APP>rrCompress  -d -7z <binRoot>/Redshift.7z <LocalTemp>
-# [Exec] <RR_APP>rrCompress  -d -7z <dataDir>/RedshiftBenchmarkScene.7z <dataDir>
+# [Exec] <RR_APP>rrCompress  -d -7z <binRoot>/Redshift.01.7z <LocalTemp>
+# [Exec] <RR_APP>rrCompress  -d -7z <dataDir>/RedshiftBenchmarkScene.01.7z <dataDir>
 # REDSHIFT_COREDATAPATH= <LocalTemp>/Redshift
 # REDSHIFT_LICENSEPATH= <LocalTemp>/Redshift
 # [Exec] "<RR_APP>rrParseOutput" "<LocalTemp>/Redshift/bin/redshiftBenchmark   <dataDir>/RedshiftBenchmarkScene/Vultures.rs -gpu 0" table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  <resultErrorLog> -showTerminal "Workstation,Unique=<HostName>" "All_GPUs=GPU(s):;;" "Redshift=[ExecutionTimeSec_Invert]" "RedshiftT=Time:;;" "avCPUrs=[AvrgCPU]" >> <resultLog> 2>&1
