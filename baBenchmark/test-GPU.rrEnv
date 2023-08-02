@@ -269,12 +269,14 @@ echo ---------------------------------------------------------------------------
 [EndIf]
 
 [If] <rrExeOS>  [==] lx
-    [Exec] chmod +x "<LocalTemp>/vray/vray_test.allos" 
+    [Exec] chmod +x "<LocalTemp>/vray/vray_test_CUDA.allos" 
+    [Exec] chmod +x "<LocalTemp>/vray/vray_test_RTX.allos" 
     [Exec] chmod +x "<LocalTemp>/vray/vray-benchmark-5.02.01" 
 [EndIf]
 
 [If] <rrExeOS>  [==] mac
-    [Exec] chmod +x "<LocalTemp>/vray/vray_test.allos" 
+    [Exec] chmod +x "<LocalTemp>/vray/vray_test_CUDA.allos" 
+    [Exec] chmod +x "<LocalTemp>/vray/vray_test_RTX.allos" 
     [Exec] chmod +x "<LocalTemp>/vray/V-Ray Benchmark.app/Contents/MacOS/V-Ray Benchmark" 
 [EndIf]
 
