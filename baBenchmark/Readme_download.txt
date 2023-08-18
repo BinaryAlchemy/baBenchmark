@@ -1,4 +1,23 @@
 
+
+
+
+IMPORTANT NOTE:
+THIS FILE IS OUTDATED!
+It is NOT required to download any 3rdparty applications with the current version of BA Benchmark.
+We keep this file in case it is required some time again.
+
+
+
+
+
+
+
+Information:
+This description adds the required 3rdparty applications into baBenchmark.
+After these steps, the application folder was zipped with 7z and split with rrCompress into multiple parts.
+
+
 ________________________________________________________________________________
 Arnold for Maya 2022 version 5.1.3.3 
 --------------------------------------------------------------------------------
@@ -152,7 +171,7 @@ ________________________________________________________________________________
 Redshift
 --------------------------------------------------------------------------------
 No demo version available any more.
-And the old version
+And the old version does not run on new GPUs.
 
 
 
