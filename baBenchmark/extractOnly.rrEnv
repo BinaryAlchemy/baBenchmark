@@ -1,0 +1,107 @@
+# Copyright Holger Schoenberger
+
+#Information:
+# If your company uses multiple fileservers that are synced, then it is not possible that all machines write the same file at the same time.
+# The fileserver sync function would not know how to join the different versions from all fileservers into one.
+# Therefore we write one result file per fileserver IP.
+#
+# rrParseOutput can do that, but in case the fileserver IPs are assigned round-robin/random per request, 
+# we want that one machine always writes to the same file (IP) for all tests.
+# Therfore we get the IP once and save it to these env vars.
+#
+# Note that accessing a fileserver path via IP is possible on Windows only.
+
+BenchmarkVersion=01.01
+
+Base_Dir = [rrEnvDir]
+
+
+[If] <rrExeOS>  [==] win
+    LocalTemp = %TEMP%/baBenchmark
+[Else]
+    LocalTemp = /tmp/baBenchmark
+[EndIf]
+tempOut= <LocalTemp>/out
+
+
+#env name must be rrBin for .rrEnv command [copy] 
+rrBin=<binRoot>/rrBin/
+
+[If] <rrExeOS>  [==] mac
+    RR_APP=<rrBin>all.app/Contents/MacOS/
+[Else]
+    RR_APP=<rrBin>
+[EndIf]
+
+[CreateFolder] <Base_Dir>_results/log
+[CreateFolder] <tempOut>
+[CreateFolder] <LocalTemp>
+
+dataDirSource= <Base_Dir>data
+dataDir= <LocalTemp>/data
+
+echo [EchoCurrentTime]
+
+testCount = 10
+
+[copy] SyncCreateDir <dataDirSource>   =>   <dataDir>
+[Exec] <RR_APP>rrCompress  -d -7z <binRoot>/arnold.01.7z <LocalTemp>
+[Exec] <RR_APP>rrCompress  -d -7z <binRoot>/blender.01.7z <LocalTemp>
+[Exec] <RR_APP>rrCompress  -d -7z <dataDir>/arnold_ass.01.7z <dataDir>
+[Exec] <RR_APP>rrCompress  -d -7z <dataDir>/blender_main.01.7z <dataDir>
+
+
+[If] <rrExeOS>  [!=] win
+    [Exec] chmod +x <BLENDER_APP>
+    [Exec] chmod +x <Arnold_Dir>/bin/kick
+[EndIf]
+
+
+[Exec] <RR_APP>rrCompress  -d -7z <binRoot>/vray.01.7z <LocalTemp>
+
+[If] <rrExeOS>  [==] win
+    #we have to do this to be able to use the Intel Performance Cores on Windows 10 for rendering
+    # powercfg requires a file, but V-Ray Benchmark decompresses and executes at once. So we create a dummy file for Windows
+    [CreateFolder] %TEMP%\V-Ray Benchmark\resources\app\bin
+    echo  dummyFile > "%TEMP%\V-Ray Benchmark\resources\app\bin\V-Ray Benchmark (CLI).exe"
+    [Exec] powercfg /powerthrottling disable /path "%TEMP%\V-Ray Benchmark\resources\app\bin\V-Ray Benchmark (CLI).exe" 
+    [Exec] powercfg /powerthrottling list 
+[EndIf]
+
+[If] <rrExeOS>  [==] lx
+    [Exec] chmod +x "<LocalTemp>/vray/vray_test.allos" 
+    [Exec] chmod +x "<LocalTemp>/vray/vray-benchmark-5.02.01" 
+[EndIf]
+
+[If] <rrExeOS>  [==] mac
+    [Exec] chmod +x "<LocalTemp>/vray/vray_test.allos" 
+    [Exec] chmod +x "<LocalTemp>/vray/V-Ray Benchmark.app/Contents/MacOS/V-Ray Benchmark" 
+[EndIf]
+
+
+[Exec] <RR_APP>rrCompress  -d -7z <binRoot>/CinebenchR23.01.7z <LocalTemp>
+
+[If] <rrExeOS>  [==] mac
+    [Exec] chmod +x <LocalTemp>/Cinebench.app/Contents/MacOS/Cinebench
+
+[EndIf]
+
+
+
+[Exec] <RR_APP>rrCompress  -d -7z <binRoot>/octane.01.7z <LocalTemp>
+
+[If] <rrExeOS>  [==] mac
+    [Exec] <RR_APP>rrCompress  -d -7z <dataDir>/octane_benchmark_data.7z <LocalTemp>/OctaneBench.app/Contents/Resources/
+    OCTANE_APP=<LocalTemp>/OctaneBench.app/Contents/MacOS/octane
+[Else]
+    [Exec] <RR_APP>rrCompress  -d -7z <dataDir>/octane_benchmark_data.7z <LocalTemp>/octane/
+    [If] <rrExeOS>  [==] win
+        OCTANE_APP=<LocalTemp>/octane/octane-cli.exe
+    [Else]
+        OCTANE_APP=<LocalTemp>/octane/octane
+    [EndIf]
+[EndIf]
+
+[If] <rrExeOS>  [!=] win
+    [Exec] chmod +x "<OCTANE_APP>" 
+[EndIf]
