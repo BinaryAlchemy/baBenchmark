@@ -128,10 +128,7 @@ echo ---------------------------------------------------------------------------
 
 noNvidia= 0
 [If] <rrExeOS>  [!=] mac
-    echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
-    echo gpu 5/<testCount> rrGpuBench... >> <resultLog> 2>&1
-    echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
-    [Exec] "<RR_APP>rrParseOutput" "<RR_APP>rrGpuBench --"  table "<resultCSV>" -showCmdOutput -csv_EN -forwardExitCode -ErrorLogfile  <resultErrorLog> "Workstation,Unique=<HostName>" "rrGPS,NumberP=(GPS):;;GCalcs"    >> <resultLog> 2>&1
+    [Exec] "<RR_APP>rrGpuBench --"  
 [EndIf]
 noNvidia= [ExitCode]
 
@@ -144,6 +141,11 @@ echo noNvidia is <noNvidia> >> <resultLog> 2>&1
 
 [If] <noNvidia> [==] 0
     [If] <rrExeOS>  [!=] mac
+        echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
+        echo gpu 5/<testCount> rrGpuBench... >> <resultLog> 2>&1
+        echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
+        [Exec] "<RR_APP>rrParseOutput" "<RR_APP>rrGpuBench --"  table "<resultCSV>" -showCmdOutput -csv_EN  -ErrorLogfile  <resultErrorLog> "Workstation,Unique=<HostName>" "rrGPS,NumberP=(GPS):;;GCalcs"    >> <resultLog> 2>&1
+
         echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
         echo gpu 6/<testCount> rrGpuInfo... >> <resultLog> 2>&1
         echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
