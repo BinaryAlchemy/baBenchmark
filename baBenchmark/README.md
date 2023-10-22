@@ -2,7 +2,7 @@
 
 
 
-This speedtest uses multiple different CPU an GPU tests to measure the speed of a computer.
+This speedtest uses multiple different CPU and GPU tests to measure the speed of a computer.
 The results are collected in a .csv table, which can be opened/imported into Excel.
 
 

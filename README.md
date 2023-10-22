@@ -2,27 +2,20 @@
 
 
 
-This speedtest uses multiple different CPU tests to measure the speed of a machine.
+This speedtest uses multiple different CPU and GPU tests to measure the speed of a computer.
 The results are collected in a .csv table, which can be opened/imported into Excel.
-
-Note Excel import: 
-If you are located in e.g. Germany and your system does not use the decimal symbol . (point), 
-then you have to use Excel menu Data/External Data/import from text.
-Change the Settings Divider to Comma and change the number format decimal symbol to . (point) and the 1000er symbol to comma.
 
 
 How to use:
 
 1) 
-At first, please see the file Readme_download.txt to download missing executables.
-(Like Arnold)
-
-2) 
-Open a terminal/command prompt and execute the startup script for your OS.
+Optionally: Open a terminal/command prompt.
+Execute the startup script for your OS.
 
 baBenchmark\START_Windows_CPU.bat  [prependName] [appendName]
 
-IMPORTANT NOTE for the CPU test:
+
+IMPORTANT NOTE for the CPU test regarding VRAY:
 WINDOWS with CPU INTEL 12th Gen and later:
 The new Intel CPUs have Performance and Efficiency cores.
 Windows 10/11 automatically assigns the render to Efficiency cores only.
@@ -55,21 +48,44 @@ Therefore add the original name of the machine.
 START_Windows_CPU.bat  MyAMDmachine   
 
 
-3) 
-Windows only: 
+Execute on renderfarm:
+You can load the startup script START_Windows_CPU.bat into the rrSubmitter as well.
+Change the renderer to "Once Each Client" and submit it.
+IMPORTANT Note:
+Cinebench does not run on Windows if the rrClient is running as background service.
+(Cinebench is using some UI libs which the Nvidia driver does not offer for background tasks)
+
+
+
+2) 
+Hint: Windows only: 
 DO NOT click in any terminal window.
 If you do, the title of the cmd window changes to "Select" and the execution stops.
 
-4) 
+3) 
 Wait until all tasks are executed.
 The terminal states "---------------- DONE ------------"
 
 
-5) 
-Open the file CPU-Results___...csv
-Not about the resulting filename:
+4) 
+Open the .csv file in subfolder /_results
+
+Note about the .csv filename:
 The test adds the fileserver IP to the name.
-This is required in case you have multiple synced fileservers with different IPs.
+This is required in case you have multiple synced fileservers/fileserver heads with different IPs.
+
+
+Note Excel import: 
+If you are located in e.g. Germany then your system does not use the . (point) as decimal symbol.
+You have to use Excel menu "Data"/"External Data"/"Import from text" to open the csv files.
+Change the Settings Divider to Comma and change the number format decimal symbol to . (point) and the 1000er symbol to comma.
+
+Note Google Drive import: 
+If you are located in e.g. Germany then your system does not use the . (point) as decimal symbol.
+In this case Google is not able to open the file properly.
+You may change the settings somewhere in your google account (Sorry that I am not able to provide the right steps atm)
+
+
 
 
 Result notes:
@@ -98,10 +114,6 @@ VM_hardware retrieves the VM type/size of Azure, AWS and GCC.
 
 
 
-Renderfarm:
-You can load the startup script START_Windows_CPU.bat into the rrSubmitter as well.
-Change the renderer to "Once Each Client" and submit it.
-Note that CineBench does not run on Windows if the rrClient is running as background service.
 
 
 
