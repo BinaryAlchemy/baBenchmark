@@ -1,0 +1,144 @@
+# Copyright Holger Schoenberger
+
+#Information:
+# If your company uses multiple fileservers that are synced, then it is not possible that all machines write the same file at the same time.
+# The fileserver sync function would not know how to join the different versions from all fileservers into one.
+# Therefore we write one result file per fileserver IP.
+#
+# rrParseOutput can do that, but in case the fileserver IPs are assigned round-robin/random per request, 
+# we want that one machine always writes to the same file (IP) for all tests.
+# Therfore we get the IP once and save it to these env vars.
+#
+# Note that accessing a fileserver path via IP is possible on Windows only.
+
+BenchmarkVersion=01.01
+
+[If] <RandStr>  [==] 
+    RandStr= [RandomStr3]
+[EndIf]
+
+Base_Dir = [rrEnvDir]
+IP_Server= [rrEnvServer]
+HostName = [host]
+
+[If] <PrependHostName>  [!=] 
+    [If] <PrependHostName>  [!=] -
+        HostName = <PrependHostName>_<HostName>
+    [EndIf]
+[EndIf]
+
+[If] <AppendHostName>  [!=] 
+    HostName = <HostName>_<AppendHostName>
+[EndIf]
+
+
+AppendRandom= TRUE
+[If] <AppendRandomName>  [==] FALSE
+    AppendRandom= FALSE
+[EndIf]
+[If] <AppendRandomName>  [==] false
+    AppendRandom= FALSE
+[EndIf]
+
+#to get a unique name in case we re-run the Benchmark
+[If] <AppendRandom>  [==] TRUE
+    HostName = <HostName>_<RandStr>
+[EndIf]
+
+resultLog= <Base_Dir>_results/log/<HostName>__<rrExeOS>_CPUsingle.txt
+resultErrorLog= <Base_Dir>_results/log/<HostName>__<rrExeOS>_CPUsingle____ERROR.txt
+resultCSV= <Base_Dir>_results/CPUsingle-Results___<IP_Server>.csv
+
+echo HostName used is <HostName>  >> <resultLog> 2>&1
+
+
+[If] <rrExeOS>  [==] win
+    LocalTemp = %TEMP%/baBenchmark
+[Else]
+    LocalTemp = /tmp/baBenchmark
+[EndIf]
+tempOut= <LocalTemp>/out
+
+
+#env name must be rrBin for .rrEnv command [copy] 
+rrBin=<binRoot>/rrBin/
+
+[If] <rrExeOS>  [==] mac
+    RR_APP=<rrBin>all.app/Contents/MacOS/
+[Else]
+    RR_APP=<rrBin>
+[EndIf]
+
+[CreateFolder] <Base_Dir>_results/log
+[CreateFolder] <tempOut>
+[CreateFolder] <LocalTemp>
+
+dataDirSource= <Base_Dir>data
+dataDir= <LocalTemp>/data
+
+echo [EchoCurrentTime]
+echo Writing results to <resultCSV>
+echo Writing logfile to <resultLog>
+echo baBenchmarkVersion: <BenchmarkVersion>   >> <resultLog> 2>&1
+
+#not required, but in case something fails, then the result file matches all .csv files generated
+[copy] KeepExisting <dataDir>/empty_CPU.csv   =>   <resultCSV>
+
+
+echo ------------------------- START--------------------------------   
+echo ------------------------- START--------------------------------   > <resultLog> 2>&1
+
+
+#linux does not support an exit core bigger than 255. So we have to split the time value.
+
+[Exec] "<RR_APP>rrTest_TerminalTimer" -b1 >> <resultLog> 2>&1
+startTime1= [ExitCode]
+[Exec] "<RR_APP>rrTest_TerminalTimer" -b2 >> <resultLog> 2>&1
+startTime2= [ExitCode]
+[Exec] "<RR_APP>rrTest_TerminalTimer" -b3 >> <resultLog> 2>&1
+startTime3= [ExitCode]
+[Exec] "<RR_APP>rrTest_TerminalTimer" -b4 >> <resultLog> 2>&1
+startTime4= [ExitCode]
+
+
+
+testCount = 2
+
+
+echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
+echo CPU  rrTestMachine... >> <resultLog> 2>&1
+echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
+[Exec] "<RR_APP>rrParseOutput" "<RR_APP>rrTestMachine -no_save -no_minus"  table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  <resultErrorLog> "Workstation,Unique=<HostName>" "OS=OS type:  ';;' " "OSver=OS_Info:  ';;' " "VM=VM host:  ';;'" "VM_hardware=VM hardware:  ';;'"  "VM_region=VM region:  ';;'"  "Ver=<BenchmarkVersion>"  "StartDate=[dateMonth]" "StartTime=[creationTime]" >> <resultLog> 2>&1
+
+
+echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
+echo CPU  baCPUInfo... >> <resultLog> 2>&1
+echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
+[Exec] "<RR_APP>rrParseOutput" "<RR_APP>baCPUInfo"  table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  <resultErrorLog> "Workstation,Unique=<HostName>" "Cores=CPU Core Count:;;" "CoresHW=CPU Core Count (HW):;;"  "CPU=CPU:;;" "RAM=RAM  GB:;;"  "RAM Mhz=RAM  Mhz:;;"   >> <resultLog> 2>&1
+
+
+
+echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
+echo [EchoCurrentTime]
+echo CPU 1/<testCount> rrTest_CpuBenchmark ... >> <resultLog> 2>&1
+echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
+[Exec] "<RR_APP>rrParseOutput" "<RR_APP>rrTest_CpuBenchmark Single" table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  <resultErrorLog> -showTerminal "Workstation,Unique=<HostName>" "rrPS1,NumberP=totalSpeed;;PS"  "CPUps1=[MaxCPU]" "avCPUps1=[AvrgCPU]"  "rrTime1,Number=Time_Exec:;;sec"  >> <resultLog> 2>&1
+
+
+[Exec] <RR_APP>rrCompress  -d -7z <binRoot>/CinebenchR23.01.7z <LocalTemp>
+echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
+echo [EchoCurrentTime]
+echo CPU 2/<testCount> C4D/CineBench... >> <resultLog> 2>&1
+echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
+[If] <rrExeOS>  [==] win
+        [Exec] "<RR_APP>rrParseOutput" "<LocalTemp>/CinebenchR23/Cinebench.exe g_CinebenchCpu1Test=true g_CinebenchMinimumTestDuration=150"   table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  <resultErrorLog> -showTerminal "Workstation,Unique=<HostName>" "C4D_1,NumberP=CB;;("  "C4D_Cpu1=[MaxCPU]"  "C4D_avCpu1=[AvrgCPU]" >> <resultLog> 2>&1
+[EndIf]
+
+
+echo cleaning up...
+[DelFolder]  <tempOut>
+[DelFolder]  <LocalTemp>
+
+echo ------------------------- DONE --------------------------------   >> <resultLog> 2>&1
+echo ------------------------- DONE --------------------------------   >> <resultLog> 2>&1
+

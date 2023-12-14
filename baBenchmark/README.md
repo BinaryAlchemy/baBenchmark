@@ -12,7 +12,7 @@ How to use:
 Optionally: Open a terminal/command prompt.
 Execute the startup script for your OS.
 
-baBenchmark\START_Windows_CPU.bat  [prependName] [appendName]
+baBenchmark\START_Windows_CPU.bat [AppendRandomName] [prependName] [appendName]
 
 
 IMPORTANT NOTE for the CPU test regarding VRAY:
@@ -24,18 +24,26 @@ As a result, the column CPUv state about 34% only.
 In this case, please start the command prompt with admin rights.
 Then baBenchmark can tell Windows that these renderer should use all cores.
 
+[AppendRandomName] 
+This benchmark adds 3 random letters to the computer name.
+In case you run this benchmark twice or more times, each test is added into its own row.
+If you do not want this, then add "false" or "FALSE" as commandline flag for [AppendRandomName].
+Any other value keeps the default behavior
+
 
 [prependName] and [appendName] are optional.
 If you do not specify them, then the hostname is used for the name in the resulting table.
 But there are cases in which the hostname is not sufficient.
 In this case you can prepend or append a name to the hostname.
+Note: If you want to set any of these commandline flags, then you MUST set [AppendRandomName]  as well.
+You may set it to - or any other value.
 
 Example to use [appendName]: 
 You test the same machine twice. Once which default RAM settings, once with improved RAM settings.
 RAM modules have an internal timing table with faster modes named XMP(Intel) or D.O.C.P.(AMD).
 This mode can be enabled in BIOS. Use CPUZ tab "SPD" to see the available timing table. 
-Commandline (notice the seperated "-" to ignore the [prependName] ):
-START_Windows_CPU.bat  -  FastRAM
+Commandline (notice the seperated "-" to ignore the [AppendRandomName] and [prependName] ):
+START_Windows_CPU.bat  - -  FastRAM
 
 
 Example to use [prependName]: 
