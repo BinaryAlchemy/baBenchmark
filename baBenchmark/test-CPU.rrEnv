@@ -128,7 +128,7 @@ echo ---------------------------------------------------------------------------
 echo [EchoCurrentTime]
 echo CPU 1/<testCount> rrTest_CpuBenchmark ... >> <resultLog> 2>&1
 echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
-[Exec] "<RR_APP>rrParseOutput" "<RR_APP>rrTest_CpuBenchmark ClientMultiNoPrint exitCodeThreshold 200" table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  <resultErrorLog> -showTerminal -forwardExitCode "Workstation,Unique=<HostName>" "rrPS,NumberP=PS_Result:;;"  "rrPS core,NumberP=Average per core:;;PS" "CPUps=[MaxCPU]" "avCPUps=[AvrgCPU]"  "rrTime,Number=Time_Exec:;;sec"  "GhzCur,Number=CPU MHz summed (measured current, HT adjusted):;;"  "GhzCal,Number=CPU MHz summed (calculated per Core, HT adjusted):;;" >> <resultLog> 2>&1
+[Exec] "<RR_APP>rrParseOutput" "<RR_APP>rrTest_CpuBenchmark All exitCodeThreshold 200" table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  <resultErrorLog> -showTerminal -forwardExitCode "Workstation,Unique=<HostName>" "rrPS,NumberP=PS_Result:;;"  "rrPS core,NumberP=Average per core:;;PS" "CPUps=[MaxCPU]" "avCPUps=[AvrgCPU]"  "rrTime,Number=Time_Exec:;;sec"  "GhzCur,Number=CPU MHz summed (measured current, HT adjusted):;;"  "GhzCal,Number=CPU MHz summed (calculated per Core, HT adjusted):;;" >> <resultLog> 2>&1
 speedIdx= [ExitCode]
 echo speedIdx is <speedIdx> >> <resultLog> 2>&1
 
@@ -266,7 +266,7 @@ echo ---------------------------------------------------------------------------
 echo [EchoCurrentTime]
 echo CPU 7/<testCount> rrTest_CpuBenchmark... >> <resultLog> 2>&1
 echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
-[Exec] "<RR_APP>rrParseOutput" "<RR_APP>rrTest_CpuBenchmark ClientMultiNoPrint" table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  <resultErrorLog> -showTerminal "Workstation,Unique=<HostName>" "rrPS2,NumberP=PS_Result:;;" "GhzCur2,Number=CPU MHz summed (measured current, HT adjusted):;;"  >> <resultLog> 2>&1
+[Exec] "<RR_APP>rrParseOutput" "<RR_APP>rrTest_CpuBenchmark All" table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  <resultErrorLog> -showTerminal "Workstation,Unique=<HostName>" "rrPS2,NumberP=PS_Result:;;" "GhzCur2,Number=CPU MHz summed (measured current, HT adjusted):;;"  >> <resultLog> 2>&1
 
 
 
