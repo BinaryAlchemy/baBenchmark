@@ -343,7 +343,7 @@ echo noOptix is <noOptix> >> <resultLog> 2>&1
 echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
 echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
 
-[Exec] "<RR_APP>rrParseOutput" "<RR_APP>rrTest_TerminalTimer <startTime1> <startTime2> <startTime3> <startTime4>" table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  <resultErrorLog> -showTerminal "Workstation,Unique=<HostName>" "RunTimeG=Difference:;;" "RunTimeSecG,Number=Difference seconds:;;"  >> <resultLog> 2>&1
+[Exec] "<RR_APP>rrParseOutput" "<RR_APP>rrTest_TerminalTimer <startTime1> <startTime2> <startTime3> <startTime4>" table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  <resultErrorLog> -showTerminal "Workstation,Unique=<HostName>" "RunTimeG=Difference:;;" "RunTimeGSec,Number=Difference seconds:;;"  >> <resultLog> 2>&1
 
 echo cleaning up...
 

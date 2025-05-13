@@ -138,7 +138,12 @@ echo speedIdx is <speedIdx> >> <resultLog> 2>&1
 [Exec] <RR_APP>rrCompress  -d -7z <binRoot>/blender.01.7z <LocalTemp>
 [Exec] <RR_APP>rrCompress  -d -7z <dataDir>/arnold_ass.01.7z <dataDir>
 [Exec] <RR_APP>rrCompress  -d -7z <dataDir>/blender_main.01.7z <dataDir>
-
+[If] <rrExeOS>  [==] win
+    [copy] SyncCreate <RR_APP>msvcp140.dll   =>   <LocalTemp>/arnold/bin
+    [copy] SyncCreate <RR_APP>msvcp140_1.dll  =>   <LocalTemp>/arnold/bin
+    [copy] SyncCreate <RR_APP>vcruntime140.dll   =>   <LocalTemp>/arnold/bin
+    [copy] SyncCreate <RR_APP>vcruntime140_1.dll   =>   <LocalTemp>/arnold/bin
+[EndIf]
 
 [If] <rrExeOS>  [==] mac
     BLENDER_APP= <LocalTemp>/Blender.app/Contents/MacOS/Blender
