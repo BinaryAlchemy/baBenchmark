@@ -127,14 +127,13 @@ echo ---------------------------------------------------------------------------
 [Exec] "<RR_APP>rrParseOutput" "<RR_APP>baCPUInfo"  table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  <resultErrorLog> "Workstation,Unique=<HostName>" "Cores=CPU Core Count:;;" "CoresHW=CPU Core Count (HW):;;"  "CPU=CPU:;;" "RAM=RAM  GB:;;"  "RAM Mhz=RAM  Mhz:;;"   >> <resultLog> 2>&1
 
 noNvidia= 0
-[If] <rrExeOS>  [!=] mac
-    [Exec] "<RR_APP>rrGpuBench" --   >> <resultLog> 2>&1
-[EndIf]
-noNvidia= [ExitCode]
-
-[If] <rrExeOS>  [==] mac
-    noNvidia= 0
-[EndIf]
+#[If] <rrExeOS>  [!=] mac
+#    [Exec] "<RR_APP>rrGpuBench" --   >> <resultLog> 2>&1
+#[EndIf]
+#noNvidia= [ExitCode]
+#[If] <rrExeOS>  [==] mac
+#    noNvidia= 0
+#[EndIf]
 
 
 echo noNvidia is <noNvidia> >> <resultLog> 2>&1
@@ -288,7 +287,7 @@ echo noOptix is <noOptix> >> <resultLog> 2>&1
     [EndIf]
 [EndIf]
 
-#split for windows as  we want to use the new defined <OCTANE_APP> and we are not running in special terminal mode
+#IF/Endif block split for windows as  we want to use the new defined <OCTANE_APP> and we are not running in special terminal mode
 [If] <noNvidia> [==] 0
     [If] <rrExeOS>  [!=] win
         [Exec] chmod +x "<OCTANE_APP>" 
@@ -332,14 +331,14 @@ echo noOptix is <noOptix> >> <resultLog> 2>&1
     echo [EchoCurrentTime]
     echo gpu 6/<testCount> VRay... >> <resultLog> 2>&1
     echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
-    [Exec] "<RR_APP>rrParseOutput" "<LocalTemp>/vray/vray_test_CUDA.allos"   table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  <resultErrorLog> -showTerminal "Workstation,Unique=<HostName>" "VRayGC,Number=CUDA score:;;vpaths"  "VRay_avCpuGC=[AvrgCPU]" "VRay_verG=] V-Ray Benchmark;;[" >> <resultLog> 2>&1
+    [Exec] "<RR_APP>rrParseOutput" "<LocalTemp>/vray/vray_test_CUDA.allos"   table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  <resultErrorLog> -showTerminal "Workstation,Unique=<HostName>" "VRayGC,Number=V-Ray GPU score:;;vpaths"  "VRay_avCpuGC=[AvrgCPU]" "VRay_verG=V-Ray Benchmark;;[" >> <resultLog> 2>&1
 
 
     echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
     echo [EchoCurrentTime]
     echo gpu 7/<testCount> VRay... >> <resultLog> 2>&1
     echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
-    [Exec] "<RR_APP>rrParseOutput" "<LocalTemp>/vray/vray_test_RTX.allos"   table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  <resultErrorLog> -showTerminal "Workstation,Unique=<HostName>" "VRayGR,Number=RTX score:;;vrays" "VRay_avCpuGR=[AvrgCPU]"  >> <resultLog> 2>&1
+    [Exec] "<RR_APP>rrParseOutput" "<LocalTemp>/vray/vray_test_RTX.allos"   table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  <resultErrorLog> -showTerminal "Workstation,Unique=<HostName>" "VRayGR,Number=V-Ray GPU score:;;vpaths" "VRay_avCpuGR=[AvrgCPU]"  >> <resultLog> 2>&1
 [EndIf]
 
 
@@ -353,10 +352,10 @@ echo [EchoCurrentTime]
 echo 8/ <testCount> Redshift... >> <resultLog> 2>&1
 echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
 [Exec] <RR_APP>rrCompress  -d -7z <binRoot>/Redshift.01.7z <LocalTemp>
-[Exec] <RR_APP>rrCompress  -d -7z <dataDir>/RedshiftBenchmarkScene.01.7z <dataDir>
+[Exec] <RR_APP>rrCompress  -d -7z <dataDir>/RedshiftBenchmarkScenes.01.7z <dataDir>
 REDSHIFT_COREDATAPATH= <LocalTemp>/Redshift
 REDSHIFT_LICENSEPATH= <LocalTemp>/Redshift
-[Exec] "<RR_APP>rrParseOutput" "<LocalTemp>/Redshift/bin/redshiftBenchmark   <dataDir>/RedshiftBenchmarkScene/Vultures.rs -gpu 0" table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  <resultErrorLog> -showTerminal "Workstation,Unique=<HostName>" "All_GPUs=GPU(s):;;" "Redshift=[ExecutionTimeSec_Invert]" "RedshiftT=Time:;;" "avCPUrs=[AvrgCPU]" >> <resultLog> 2>&1
+[Exec] "<RR_APP>rrParseOutput" "<LocalTemp>/Redshift/bin/redshiftBenchmark   <dataDir>/RedshiftBenchmarkScenes/Vultures.rs -gpu 0" table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  <resultErrorLog> -showTerminal "Workstation,Unique=<HostName>" "All_GPUs=GPU(s):;;" "Redshift=[ExecutionTimeSec_Invert]" "RedshiftT=Time:;;" "avCPUrs=[AvrgCPU]" >> <resultLog> 2>&1
 
 [If] <CleanUp>  [==] TRUE
     [DelFolder]  <LocalTemp>/redshift
