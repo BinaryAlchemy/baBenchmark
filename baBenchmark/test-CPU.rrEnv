@@ -173,7 +173,7 @@ ARNOLD_ADP_OPTIN=      0
     echo [EchoCurrentTime]
     echo CPU 2/<testCount> Blender... >> <resultLog> 2>&1
     echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
-    [Exec] "<RR_APP>rrParseOutput" "<BLENDER_APP> -t 0 -b -P <dataDir>/kso_blender.py -y --  -rAA 0.35 -rRenderer "Cycles" -rStart 1 -rEnd 1 -rStep 1 -rBlend <dataDir>/main.blend -rOut  <tempOut>/blendTest -f 1" table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  <resultErrorLog> -showTerminal "Workstation,Unique=<HostName>" "Blender=[ExecutionTimeSec_Invert4x]" "BlenderTime,NumberTime4x=Time: ;;(" "Blender_Cpu=[MaxCPU]" "Blender_avCpu=[AvrgCPU]"  "Blender_ver=Blender version:;;"  >> <resultLog> 2>&1
+    [Exec] "<RR_APP>rrParseOutput" "<BLENDER_APP> -t 0 -b --log-level info -P <dataDir>/kso_blender.py -y --  -rAA 0.35 -rRenderer "Cycles" -rStart 1 -rEnd 1 -rStep 1 -rBlend <dataDir>/main.blend -rOut  <tempOut>/blendTest -f 1" table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  <resultErrorLog> -showTerminal "Workstation,Unique=<HostName>" "Blender=[ExecutionTimeSec_Invert4x]" "BlenderTime,NumberTime4x=Time: ;;(" "Blender_Cpu=[MaxCPU]" "Blender_avCpu=[AvrgCPU]"  "Blender_ver=Blender version:;;"  >> <resultLog> 2>&1
 
     echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
     echo [EchoCurrentTime]
@@ -192,7 +192,7 @@ ARNOLD_ADP_OPTIN=      0
     echo [EchoCurrentTime]
     echo CPU 2/<testCount> Blender... >> <resultLog> 2>&1
     echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
-    [Exec] "<RR_APP>rrParseOutput" "<BLENDER_APP> -t 0 -b -P <dataDir>/kso_blender.py -y --  -rAA 1.4 -rRenderer "Cycles" -rStart 1 -rEnd 1 -rStep 1 -rBlend <dataDir>/main.blend -rOut  <tempOut>/blendTest -f 1" table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  <resultErrorLog> -showTerminal "Workstation,Unique=<HostName>" "Blender=[ExecutionTimeSec_Invert]" "BlenderTime,NumberTime=Time: ;;(" "Blender_Cpu=[MaxCPU]" "Blender_avCpu=[AvrgCPU]"  "Blender_ver=Blender version:;;"  >> <resultLog> 2>&1
+    [Exec] "<RR_APP>rrParseOutput" "<BLENDER_APP> -t 0 -b --log-level info -P <dataDir>/kso_blender.py -y --  -rAA 1.4 -rRenderer "Cycles" -rStart 1 -rEnd 1 -rStep 1 -rBlend <dataDir>/main.blend -rOut  <tempOut>/blendTest -f 1" table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  <resultErrorLog> -showTerminal "Workstation,Unique=<HostName>" "Blender=[ExecutionTimeSec_Invert]" "BlenderTime,NumberTime=Time: ;;(" "Blender_Cpu=[MaxCPU]" "Blender_avCpu=[AvrgCPU]"  "Blender_ver=Blender version:;;"  >> <resultLog> 2>&1
 
     echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
     echo [EchoCurrentTime]
