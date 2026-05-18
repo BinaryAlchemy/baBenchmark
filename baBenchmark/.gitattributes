@@ -1,0 +1,3 @@
+* -text
+*.zip -delta
+*.7z -delta
