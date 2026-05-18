@@ -146,9 +146,16 @@ echo noNvidia is <noNvidia> >> <resultLog> 2>&1
         echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
         echo gpu rrGpuInfo... >> <resultLog> 2>&1
         echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
-        [Exec]  "<RR_APP>rrGpuInfo" NoParentProcess -debug  >> <resultLog> 2>&1
+        [Exec]  "<RR_APP>rrGpuInfo" -single -v  >> <resultLog> 2>&1
     [EndIf]
 [EndIf]
+
+
+echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
+echo gpu rrGpuInfo... >> <resultLog> 2>&1
+echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
+[Exec] "<RR_APP>rrParseOutput" "<RR_APP>rrGpuInfo -v -bench -single"  table "<resultCSV>" -showCmdOutput -csv_EN  -ErrorLogfile  <resultErrorLog> "Workstation,Unique=<HostName>" "rrGPSnewCL,NumberP=#0: Speed:;;GPS"  "rrGPSnewCuda,NumberP=#0: SpeedCUDA:;;GPS"   >> <resultLog> 2>&1
+
 
 
 echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
@@ -324,18 +331,20 @@ echo noOptix is <noOptix> >> <resultLog> 2>&1
 
 
 
-#!!!!!!!!! NO REDSHIFT AS THERE IS NO DEMO VERSION ANY MORE !!!!!!!!!
+#!!!!!!!!! AS THERE IS NO REDSHIF DEMO VERSION ANY MORE !!!!!!!!!
 # 3.0.0 does not know Geforce 3000, latest 3.0.x opens maxon app
-# echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
-# echo [EchoCurrentTime]
-# echo 8/ <testCount> Redshift... >> <resultLog> 2>&1
-# echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
-# [Exec] <RR_APP>rrCompress  -d -7z <binRoot>/Redshift.01.7z <LocalTemp>
-# [Exec] <RR_APP>rrCompress  -d -7z <dataDir>/RedshiftBenchmarkScene.01.7z <dataDir>
-# REDSHIFT_COREDATAPATH= <LocalTemp>/Redshift
-# REDSHIFT_LICENSEPATH= <LocalTemp>/Redshift
-# [Exec] "<RR_APP>rrParseOutput" "<LocalTemp>/Redshift/bin/redshiftBenchmark   <dataDir>/RedshiftBenchmarkScene/Vultures.rs -gpu 0" table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  <resultErrorLog> -showTerminal "Workstation,Unique=<HostName>" "All_GPUs=GPU(s):;;" "Redshift=[ExecutionTimeSec_Invert]" "RedshiftT=Time:;;" "avCPUrs=[AvrgCPU]" >> <resultLog> 2>&1
-# [DelFolder]  <LocalTemp>/redshift
+#May only be called if Redshift is licenses on all machines
+
+echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
+echo [EchoCurrentTime]
+echo 8/ <testCount> Redshift... >> <resultLog> 2>&1
+echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
+[Exec] <RR_APP>rrCompress  -d -7z <binRoot>/Redshift.01.7z <LocalTemp>
+[Exec] <RR_APP>rrCompress  -d -7z <dataDir>/RedshiftBenchmarkScene.01.7z <dataDir>
+REDSHIFT_COREDATAPATH= <LocalTemp>/Redshift
+REDSHIFT_LICENSEPATH= <LocalTemp>/Redshift
+[Exec] "<RR_APP>rrParseOutput" "<LocalTemp>/Redshift/bin/redshiftBenchmark   <dataDir>/RedshiftBenchmarkScene/Vultures.rs -gpu 0" table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  <resultErrorLog> -showTerminal "Workstation,Unique=<HostName>" "All_GPUs=GPU(s):;;" "Redshift=[ExecutionTimeSec_Invert]" "RedshiftT=Time:;;" "avCPUrs=[AvrgCPU]" >> <resultLog> 2>&1
+[DelFolder]  <LocalTemp>/redshift
 
 
 
