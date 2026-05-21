@@ -179,7 +179,16 @@ echo ###########################################################################
 echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
 echo gpu rrGpuInfo... >> <resultLog> 2>&1
 echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
-[Exec] "<RR_APP>rrParseOutput" "<RR_APP>rrGpuInfo -v -bench -single"  table "<resultCSV>" -showCmdOutput -csv_EN  -ErrorLogfile  "<resultErrorLog>" "Workstation,Unique=<HostName>" "rrGPSnewCL,NumberP=#0 : Speed:;;GPS"  "rrGPSnewCuda,NumberP=#0 : SpeedCUDA:;;GPS"   >> <resultLog> 2>&1
+
+[If] <hasNvidia> [==] 1
+
+    [Exec] "<RR_APP>rrParseOutput" "<RR_APP>rrGpuInfo -v -bench -single"  table "<resultCSV>" -showCmdOutput -csv_EN  -ErrorLogfile  "<resultErrorLog>" "Workstation,Unique=<HostName>" "rrGPSnewCL,NumberP=#0 : Speed:;;GPS"  "rrGPSnewCuda,NumberP=#0 : SpeedCUDA:;;GPS"   >> <resultLog> 2>&1
+[Else]
+
+    [Exec] "<RR_APP>rrParseOutput" "<RR_APP>rrGpuInfo -v -bench -single"  table "<resultCSV>" -showCmdOutput -csv_EN  -ErrorLogfile  "<resultErrorLog>" "Workstation,Unique=<HostName>" "rrGPSnewCL,NumberP=#0 : Speed:;;GPS"    >> <resultLog> 2>&1
+
+
+[EndIf]
 
 
 
