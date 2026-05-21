@@ -401,7 +401,7 @@ echo speedIdx is <speedIdx> >> <resultLog> 2>&1
     echo [EchoCurrentTime] >> <resultLog> 2>&1
     echo gpu 6/<testCount> VRay... >> <resultLog> 2>&1
     echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
-    [Exec] "<RR_APP>rrParseOutput" "<LocalTemp>/vray/vray_test_CUDA.allos"   table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  "<resultErrorLog>" -showTerminal "Workstation,Unique=<HostName>" "VRayGpu_ver=V-Ray Benchmark;;[" "VRayGpu,Number=V-Ray GPU score:;;vpaths"  "VRayGpu_avCpu=[AvrgCPU]"  >> <resultLog> 2>&1
+    [Exec] "<RR_APP>rrParseOutput" "<LocalTemp>/vray/vray_test_CUDA.allos"   table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  "<resultErrorLog>" -showTerminal "Workstation,Unique=<HostName>" "VRayGpu_ver=V-Ray Benchmark;;[" "VRayGpu,Number=V-Ray GPU score:;;vpaths"  "VRayGpu_dev=[1]:;;"  >> <resultLog> 2>&1
 
 
     echo ###########################################################################
@@ -412,7 +412,7 @@ echo speedIdx is <speedIdx> >> <resultLog> 2>&1
     echo [EchoCurrentTime] >> <resultLog> 2>&1
     echo gpu 7/<testCount> VRay... >> <resultLog> 2>&1
     echo --------------------------------------------------------------------------- >> <resultLog> 2>&1
-    [Exec] "<RR_APP>rrParseOutput" "<LocalTemp>/vray/vray_test_RTX.allos"   table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  "<resultErrorLog>" -showTerminal "Workstation,Unique=<HostName>" "VRayGpuR,Number=V-Ray GPU score:;;vpaths" "VRayGpuR_avCpu=[AvrgCPU]"  >> <resultLog> 2>&1
+    [Exec] "<RR_APP>rrParseOutput" "<LocalTemp>/vray/vray_test_RTX.allos"   table "<resultCSV>" -showCmdOutput -csv_EN -ErrorLogfile  "<resultErrorLog>" -showTerminal "Workstation,Unique=<HostName>" "VRayGpuR,Number=V-Ray GPU score:;;vpaths" "VRayGpuR_dev=[0]:;;"  >> <resultLog> 2>&1
 [EndIf]
 
 
