@@ -32,12 +32,18 @@ HostName = [host]
 [EndIf]
 
 
-AppendRandom= TRUE
+AppendRandom= FALSE
 [If] <AppendRandomName>  [==] FALSE
     AppendRandom= FALSE
 [EndIf]
 [If] <AppendRandomName>  [==] false
     AppendRandom= FALSE
+[EndIf]
+[If] <AppendRandomName>  [==] TRUE
+    AppendRandom= TRUE
+[EndIf]
+[If] <AppendRandomName>  [==] true
+    AppendRandom= TRUE
 [EndIf]
 
 #to get a unique name in case we re-run the Benchmark
